@@ -13,33 +13,34 @@ namespace ProjetoMobills.Controllers
 {
     [Produces("application/json")]
     [Route("api/[controller]")]
+    [EnableCors("CorsPolicy")]
     [ApiController]
-    public class DespesaController : ControllerBase
+    public class ReceitaController : ControllerBase
     {
-        private readonly IDespesaRepository _despesaRepository;
+        private readonly IReceitaRepository _receitaRepository;
 
-        public DespesaController(IDespesaRepository despesaRepository)
+        public ReceitaController(IReceitaRepository receitaRepository)
         {
-            _despesaRepository = despesaRepository;
+            _receitaRepository = receitaRepository;
         }
 
         [HttpGet]
         [Consumes(MediaTypeNames.Application.Json)]
         public IActionResult GetAll()
         {
-            return new ObjectResult(_despesaRepository.List());
+            return new ObjectResult(_receitaRepository.List());
         }
 
-        [HttpGet("{id:Guid}", Name = "GetDespesaById")]
+        [HttpGet("{id:Guid}", Name = "GetReceitaById")]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult GetById([FromRoute] int id)
         {
-            Task<Despesa> Despesa = _despesaRepository.GeyById(id);
-            if(Despesa.IsCompleted)
+            Task<Receita> receita = _receitaRepository.GeyById(id);
+            if(receita.IsCompleted)
             {
-                return new OkObjectResult(Despesa);
+                return new OkObjectResult(receita);
             }
             return new NotFoundResult();
         }
@@ -48,23 +49,23 @@ namespace ProjetoMobills.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public IActionResult Save([FromBody] Despesa despesa)
+        public IActionResult Save([FromBody] Receita receita)
         {
-            Task<int> despesValid = _despesaRepository.Add(despesa);
+            Task<int> despesValid = _receitaRepository.Add(receita);
             if (ModelState.IsValid)
             {
                 return new OkObjectResult(despesValid);
             }
-            return new BadRequestObjectResult(despesa);
+            return new BadRequestObjectResult(receita);
         }
 
         [HttpPut]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status406NotAcceptable)]
-        public IActionResult Update([FromBody] Despesa despesa)
+        public IActionResult Update([FromBody] Receita receita)
         {
-            Task<int> UpdateEnfermeiro = _despesaRepository.Update(despesa);
+            Task<int> UpdateEnfermeiro = _receitaRepository.Update(receita);
             return new OkObjectResult(UpdateEnfermeiro);
         }
 
@@ -74,7 +75,7 @@ namespace ProjetoMobills.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult Delete([FromRoute] int Id)
         {
-            _despesaRepository.Delete(Id);
+            _receitaRepository.Delete(Id);
             return new NoContentResult();
         }
 

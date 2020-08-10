@@ -12,8 +12,10 @@ namespace ProjetoMobills.Data.Models
         [Required(ErrorMessage = "Campo Necessário")]
         public string Descricao { get; set; }
         [Required(ErrorMessage = "Campo Necessário")]
-        [Column(TypeName = "decimal(21,2)")]
+        [Column(TypeName = "decimal(18,2)")]
         [NotNull]
+        [RegularExpression(@"^\d+\.\d{0,2}$")]
+        [Range(0.01, 9999999999999999.99)]
         public decimal Valor { get; set; }
         public DateTime Data { get; set; }
         public Boolean Pago { get; set; }

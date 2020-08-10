@@ -29,11 +29,12 @@ namespace ProjectMobills
             services.AddTransient<IDespesaRepository, DespesaRespository>();
             services.AddTransient<IReceitaRepository, ReceitaRepository>();
 
-            services.AddControllers();
+            services.AddControllers()
+                .AddNewtonsoftJson(op => op.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("V1", new OpenApiInfo
+                c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Title = "API PROJETO MOBILLS",
                     Version = "v1",
@@ -48,14 +49,7 @@ namespace ProjectMobills
             });
        
 
-            services.AddCors(options =>
-            {
-                options.AddPolicy("CorsPolicy",
-                    builder => builder.SetIsOriginAllowed((host) => true)
-                        .AllowCredentials()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader());
-            });
+          
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,11 +62,9 @@ namespace ProjectMobills
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/api/swagger/v1/swagger.json", "Projeto Mob API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Projeto Mob API V1");
             });
 
-
-            app.UseCors("CorsPolicy");
 
             app.UseHttpsRedirection();
 
@@ -82,7 +74,9 @@ namespace ProjectMobills
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
