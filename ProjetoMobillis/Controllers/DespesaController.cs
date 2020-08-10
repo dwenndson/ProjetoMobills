@@ -11,8 +11,9 @@ using System.Threading.Tasks;
 
 namespace ProjetoMobills.Controllers
 {
+    [Produces("application/json")]
     [Route("api/[controller]")]
-    //[EnableCors("CorsPolicy")]
+    [EnableCors("CorsPolicy")]
     [ApiController]
     public class DespesaController : ControllerBase
     {
@@ -30,7 +31,7 @@ namespace ProjetoMobills.Controllers
             return new ObjectResult(_despesaRepository.List());
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetById")]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
