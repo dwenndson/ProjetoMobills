@@ -1,15 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ProjetoMobills.Data.Models
 {
     public class Receita
     {
         public Guid Id { get; set; }
+        [Required(ErrorMessage = "Campo Necessário")]
         public string Descricao { get; set; }
+        [Required(ErrorMessage = "Campo Necessário")]
+        [Column(TypeName = "decimal(18,2)")]
+        [NotNull]
+        [RegularExpression(@"^\d+\.\d{0,2}$")]
+        [Range(0.01, 9999999999999999.99)]
         public decimal Valor { get; set; }
+        [Required(ErrorMessage = "Campo Necessário")]
         public DateTime Data { get; set; }
     }
 }

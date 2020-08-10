@@ -18,6 +18,7 @@ namespace ProjetoMobills.Data.Models
         [Range(0.01, 9999999999999999.99)]
         public decimal Valor { get; set; }
         public DateTime Data { get; set; }
+        [Required(ErrorMessage = "Campo Necessário")]
         public Boolean Pago { get; set; }
     }
     
