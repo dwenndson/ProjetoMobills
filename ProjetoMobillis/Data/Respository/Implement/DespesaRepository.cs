@@ -21,12 +21,14 @@ namespace ProjetoMobills.Data.Respository
         public async Task<int> Add(Despesa despesa)
         {
             despesa.Data = DateTime.Today;
-            using var conn = new SqlConnection(_dbContext.Value);
-            conn.Open();
-            const string query = @"INSERT INTO tbl_Receita(Valor, Descricao, Pago, Data) VALUES(@Valor, @Descricao, @Pago, @Data)";
-            var affectRows = await conn.ExecuteAsync(query, despesa);
-            conn.Close();
-            return affectRows;
+            using (var conn = new SqlConnection(_dbContext.Value))
+            {
+                conn.Open();
+                const string query = @"INSERT INTO tbl_Receita(Valor, Descricao, Pago, Data) VALUES(@Valor, @Descricao, @Pago, @Data)";
+                var affectRows = await conn.ExecuteAsync(query, despesa);
+                conn.Close();
+                return affectRows;
+            }
         }
 
         public async void Delete(int id)
@@ -42,8 +44,8 @@ namespace ProjetoMobills.Data.Respository
             using var conn = new SqlConnection(_dbContext.Value);
             conn.Open();
             const string query = @"SELECT * FROM tbl_Receita WHERE id = @Id ";
-            var affectRows = await conn.QueryAsync<Despesa>(query, new { Id = id });
-            return affectRows.FirstOrDefault();
+            var affectRows = await conn.QuerySingleOrDefaultAsync<Despesa>(query, new { Id = id });
+            return affectRows;
         }
 
         public async Task<IEnumerable<Despesa>> List()
@@ -52,7 +54,7 @@ namespace ProjetoMobills.Data.Respository
             conn.Open();
             const string query = @"SELECT * FROM tbl_Receita";
             var affectRows = await conn.QueryAsync<Despesa>(query);
-            return affectRows;
+            return affectRows.ToList();
         }
 
         public async Task<int> Update(Despesa despesa)
@@ -61,7 +63,7 @@ namespace ProjetoMobills.Data.Respository
             using var conn = new SqlConnection(_dbContext.Value);
             conn.Open();
             const string query = @"UPDATE tbl_Receita SET Valor = @Valor, Descricao = @Descricao, Pago  = @Pago,  Data = @Data Value (@Valor, @Descricao, @Pago, @Data)";
-            var affectRows = await conn.QueryFirstAsync(query, despesa);
+            var affectRows = await conn.ExecuteAsync(query, despesa);
             return affectRows;
 
             

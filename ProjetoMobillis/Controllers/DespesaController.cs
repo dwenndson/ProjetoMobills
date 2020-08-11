@@ -16,18 +16,18 @@ namespace ProjetoMobills.Controllers
     [ApiController]
     public class DespesaController : ControllerBase
     {
-        private readonly IDespesaRepository _despesaRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public DespesaController(IDespesaRepository despesaRepository)
+        public DespesaController(IUnitOfWork unitOfWork)
         {
-            _despesaRepository = despesaRepository;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet]
         [Consumes(MediaTypeNames.Application.Json)]
         public IActionResult GetAll()
         {
-            return new ObjectResult(_despesaRepository.List());
+            return new ObjectResult(_unitOfWork.Despesa.List());
         }
 
         [HttpGet("{id:Guid}", Name = "GetDespesaById")]
@@ -36,7 +36,7 @@ namespace ProjetoMobills.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult GetById([FromRoute] int id)
         {
-            Task<Despesa> Despesa = _despesaRepository.GeyById(id);
+            Task<Despesa> Despesa = _unitOfWork.Despesa.GeyById(id);
             if(Despesa.IsCompleted)
             {
                 return new OkObjectResult(Despesa);
@@ -50,7 +50,7 @@ namespace ProjetoMobills.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult Save([FromBody] Despesa despesa)
         {
-            Task<int> despesValid = _despesaRepository.Add(despesa);
+            Task<int> despesValid = _unitOfWork.Despesa.Add(despesa);
             if (ModelState.IsValid)
             {
                 return new OkObjectResult(despesValid);
@@ -64,7 +64,7 @@ namespace ProjetoMobills.Controllers
         [ProducesResponseType(StatusCodes.Status406NotAcceptable)]
         public IActionResult Update([FromBody] Despesa despesa)
         {
-            Task<int> UpdateEnfermeiro = _despesaRepository.Update(despesa);
+            Task<int> UpdateEnfermeiro = _unitOfWork.Despesa.Update(despesa);
             return new OkObjectResult(UpdateEnfermeiro);
         }
 
@@ -74,7 +74,7 @@ namespace ProjetoMobills.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult Delete([FromRoute] int Id)
         {
-            _despesaRepository.Delete(Id);
+            _unitOfWork.Despesa.Delete(Id);
             return new NoContentResult();
         }
 

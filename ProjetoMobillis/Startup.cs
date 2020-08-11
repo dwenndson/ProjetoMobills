@@ -28,6 +28,7 @@ namespace ProjectMobills
 
             services.AddTransient<IDespesaRepository, DespesaRespository>();
             services.AddTransient<IReceitaRepository, ReceitaRepository>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             services.AddControllers()
                 .AddNewtonsoftJson(op => op.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
