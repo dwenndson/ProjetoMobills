@@ -28,12 +28,13 @@ namespace ProjetoMobills.Data.Respository.Implement
             return affectRows;
         }
 
-        public async void Delete(int id)
+        public async Task<int> Delete(int id)
         {
             const string query = "DELETE FROM tbl_Receita WHERE Id = @Id";
             using var conn = new SqlConnection(_dbContext.Value);
             conn.Open();
             var affectRowns = await conn.ExecuteAsync(query, new { Id = id });
+            return affectRowns;
         }
 
         public async Task<Receita> GeyById(int id)

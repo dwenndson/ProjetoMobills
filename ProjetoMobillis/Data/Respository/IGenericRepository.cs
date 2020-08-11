@@ -9,6 +9,6 @@ namespace ProjetoMobills.Data.Respository
         Task<T> GeyById(int id);
         Task<int> Add(T t);
         Task<int> Update(T t);
-        void Delete(int id);
+        Task<int> Delete(int id);
     }
 }

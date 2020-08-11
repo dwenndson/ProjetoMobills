@@ -18,9 +18,7 @@ namespace ProjetoMobills.Data.Models
         public decimal Valor { get; set; }
         public DateTime Data { get; set; }
         [Required(ErrorMessage = "Campo Necessário")]
-        public Boolean Pago { get; set; }
+        public bool Pago { get; set; }
     }
-    
-
 
 }

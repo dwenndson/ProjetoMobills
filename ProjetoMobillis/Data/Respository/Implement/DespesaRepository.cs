@@ -24,26 +24,27 @@ namespace ProjetoMobills.Data.Respository
             using (var conn = new SqlConnection(_dbContext.Value))
             {
                 conn.Open();
-                const string query = @"INSERT INTO tbl_Receita(Valor, Descricao, Pago, Data) VALUES(@Valor, @Descricao, @Pago, @Data)";
+                const string query = @"INSERT INTO tbl_Despesa(Valor, Descricao, Pago, Data) VALUES (@Valor, @Descricao, @Pago, @Data)";
                 var affectRows = await conn.ExecuteAsync(query, despesa);
                 conn.Close();
                 return affectRows;
             }
         }
 
-        public async void Delete(int id)
+        public async Task<int> Delete(int id)
         {
-            const string query = "DELETE FROM tbl_Receita WHERE Id = @Id";
+            const string query = "DELETE FROM tbl_Despesa WHERE Id = @Id";
             using var conn = new SqlConnection(_dbContext.Value);
             conn.Open();
             var affectRowns = await conn.ExecuteAsync(query, new { Id = id });
+            return affectRowns;
         }
 
         public async Task<Despesa> GeyById(int id)
         {
             using var conn = new SqlConnection(_dbContext.Value);
             conn.Open();
-            const string query = @"SELECT * FROM tbl_Receita WHERE id = @Id ";
+            const string query = @"SELECT * FROM tbl_Despesa WHERE id = @Id ";
             var affectRows = await conn.QuerySingleOrDefaultAsync<Despesa>(query, new { Id = id });
             return affectRows;
         }
@@ -52,7 +53,7 @@ namespace ProjetoMobills.Data.Respository
         {
             using var conn = new SqlConnection(_dbContext.Value);
             conn.Open();
-            const string query = @"SELECT * FROM tbl_Receita";
+            const string query = @"SELECT * FROM tbl_Despesa";
             var affectRows = await conn.QueryAsync<Despesa>(query);
             return affectRows.ToList();
         }

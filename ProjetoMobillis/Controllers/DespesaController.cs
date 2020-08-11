@@ -6,6 +6,7 @@ using ProjetoMobills.Data.Respository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Net.Mime;
 using System.Threading.Tasks;
 
@@ -25,21 +26,22 @@ namespace ProjetoMobills.Controllers
 
         [HttpGet]
         [Consumes(MediaTypeNames.Application.Json)]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            return new ObjectResult(_unitOfWork.Despesa.List());
+            var data = await _unitOfWork.Despesa.List();
+            return Ok(data);
         }
 
         [HttpGet("{id:Guid}", Name = "GetDespesaById")]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult GetById([FromRoute] int id)
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            Task<Despesa> Despesa = _unitOfWork.Despesa.GeyById(id);
-            if(Despesa.IsCompleted)
+            var data = await _unitOfWork.Despesa.GeyById(id);
+            if(data != null)
             {
-                return new OkObjectResult(Despesa);
+                return Ok(data);
             }
             return new NotFoundResult();
         }
@@ -48,12 +50,12 @@ namespace ProjetoMobills.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public IActionResult Save([FromBody] Despesa despesa)
+        public async Task<IActionResult> Save([FromBody] Despesa despesa)
         {
-            Task<int> despesValid = _unitOfWork.Despesa.Add(despesa);
+            var data = await _unitOfWork.Despesa.Add(despesa);
             if (ModelState.IsValid)
             {
-                return new OkObjectResult(despesValid);
+                return Ok(data);
             }
             return new BadRequestObjectResult(despesa);
         }
@@ -62,10 +64,10 @@ namespace ProjetoMobills.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status406NotAcceptable)]
-        public IActionResult Update([FromBody] Despesa despesa)
+        public async Task<IActionResult> Update([FromBody] Despesa despesa)
         {
-            Task<int> UpdateEnfermeiro = _unitOfWork.Despesa.Update(despesa);
-            return new OkObjectResult(UpdateEnfermeiro);
+            var data = await _unitOfWork.Despesa.Update(despesa);
+            return Ok(data);
         }
 
         [HttpDelete("{id:Guid}")]
@@ -74,8 +76,8 @@ namespace ProjetoMobills.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult Delete([FromRoute] int Id)
         {
-            _unitOfWork.Despesa.Delete(Id);
-            return new NoContentResult();
+          var data = _unitOfWork.Despesa.Delete(Id);
+            return Ok(data);
         }
 
     }
