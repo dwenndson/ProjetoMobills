@@ -13,8 +13,6 @@ namespace ProjetoMobills.Controllers
 {
     [Produces("application/json")]
     [Route("api/[controller]")]
-    [EnableCors("CorsPolicy")]
-    [ApiController]
     public class ReceitaController : ControllerBase
     {
         private readonly IReceitaRepository _receitaRepository;
